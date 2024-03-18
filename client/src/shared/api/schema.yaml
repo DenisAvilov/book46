@@ -1,0 +1,391 @@
+openapi: 3.0.0
+paths:
+  /auth/sing-up:
+    post:
+      operationId: AuthController_singUp
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SingUpBodyDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+        - auth
+  /auth/sing-in:
+    post:
+      operationId: AuthController_singIn
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SingInBodyDto'
+      responses:
+        '200':
+          description: ''
+      tags:
+        - auth
+  /auth/sing-out:
+    post:
+      operationId: AuthController_singOut
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+        - auth
+  /auth/session:
+    get:
+      operationId: AuthController_getSessionInfo
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetSessionInfoDto'
+      tags:
+        - auth
+  /auth/{activeLink}:
+    get:
+      operationId: AuthController_activateMail
+      parameters:
+        - name: activeLink
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActivationLink'
+      tags:
+        - auth
+  /account:
+    get:
+      operationId: AccountController_getAccount
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountDto'
+      tags:
+        - account
+    patch:
+      operationId: AccountController_patchAccount
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchAccountDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountDto'
+      tags:
+        - account
+  /account/{id}:
+    get:
+      operationId: AccountController_getAccountInfo
+      parameters:
+        - name: id
+          required: true
+          in: path
+          description: ID of the user
+          example: 44
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileDto'
+      tags:
+        - account
+    delete:
+      operationId: AccountController_deleteUser
+      parameters:
+        - name: id
+          required: true
+          in: path
+          description: ID of the user
+          example: 44
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      tags:
+        - account
+  /account/patch-contact:
+    patch:
+      operationId: AccountController_patchContact
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContactDtoSW'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContactDtoSW'
+      tags:
+        - account
+  /account/patch-contact-activate:
+    patch:
+      operationId: AccountController_patchVerifyPhone
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContactDtoSWActivate'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContactDtoSWActivate'
+      tags:
+        - account
+  /account/patch-social:
+    patch:
+      operationId: AccountController_patchSocial
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchSocialDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SocialDto'
+      tags:
+        - account
+info:
+  title: Додаток Помічник
+  description: Додаток для ведення обліку майна
+  version: '1.0'
+  contact: {}
+tags:
+  - name: auth
+    description: 'запити повязані з авторізциї. '
+  - name: account
+    description: запити щодо акаунта користувача.
+servers: []
+components:
+  schemas:
+    SingUpBodyDto:
+      type: object
+      properties:
+        email:
+          type: string
+          example: avilovd.a@gmail.com
+        password:
+          type: string
+          example: '1234'
+      required:
+        - email
+        - password
+    SingInBodyDto:
+      type: object
+      properties:
+        email:
+          type: string
+          example: avilovd.a@gmail.com
+        password:
+          type: string
+          example: '1234'
+      required:
+        - email
+        - password
+    GetSessionInfoDto:
+      type: object
+      properties:
+        userId:
+          type: number
+        email:
+          type: string
+        isActivated:
+          type: boolean
+        role:
+          type: string
+        iat:
+          type: number
+        exp:
+          type: number
+      required:
+        - userId
+        - email
+        - isActivated
+        - role
+        - iat
+        - exp
+    ActivationLink:
+      type: object
+      properties:
+        activationLink:
+          type: string
+      required:
+        - activationLink
+    AccountDto:
+      type: object
+      properties:
+        id:
+          type: number
+        userId:
+          type: number
+        name:
+          type: object
+          example: Denis
+        lastName:
+          type: object
+          example: Avilov
+        img:
+          type: object
+          example: https://www.google.com=images
+      required:
+        - id
+        - userId
+        - name
+        - lastName
+        - img
+    UserDto:
+      type: object
+      properties:
+        id:
+          type: number
+        email:
+          type: string
+        role:
+          type: string
+        hash:
+          type: string
+        salt:
+          type: string
+        isActivated:
+          type: boolean
+      required:
+        - id
+        - email
+        - role
+        - hash
+        - salt
+        - isActivated
+    ProfileDto:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/UserDto'
+        account:
+          type: object
+        contact:
+          type: object
+        social:
+          type: object
+      required:
+        - user
+        - account
+        - contact
+        - social
+    PatchAccountDto:
+      type: object
+      properties:
+        name:
+          type: object
+          example: Denis
+        lastName:
+          type: object
+          example: Avilov
+        img:
+          type: object
+          example: https://www.google.com/images
+      required:
+        - name
+        - lastName
+        - img
+    ContactDtoSW:
+      type: object
+      properties:
+        phone:
+          type: object
+          example: '+380506195452'
+      required:
+        - phone
+    ContactDtoSWActivate:
+      type: object
+      properties:
+        activationLink:
+          type: string
+          example: '1234'
+      required:
+        - activationLink
+    PatchSocialDto:
+      type: object
+      properties:
+        fb:
+          type: string
+          example: facebook.com/user
+        instagram:
+          type: string
+          example: instagram.com/user
+        telegram:
+          type: string
+          example: t.me/user
+      required:
+        - fb
+        - instagram
+        - telegram
+    SocialDto:
+      type: object
+      properties:
+        fb:
+          type: object
+          example: http//:fb
+        instagram:
+          type: object
+          example: http//:instagram
+        telegram:
+          type: object
+          example: http//:telegram
+        id:
+          type: number
+        userId:
+          type: number
+      required:
+        - fb
+        - instagram
+        - telegram
+        - id
+        - userId
