@@ -2,9 +2,6 @@ import { BadRequestException, Injectable, Param } from '@nestjs/common';
 import { AccountDto, PatchAccountDto, ProfileDto } from './dto';
 import { DbService } from 'src/db/db.service';
 
-
-
-
 @Injectable()
 export class AccountService {
   constructor(private db: DbService){}
@@ -13,7 +10,9 @@ async createAccount(userId: number){
   return await this.db.account.create({data: {
     userId: userId,
     name: 'Ім\'я',
-    lastName: 'Призвище'
+    lastName: 'Призвище',
+    rank: 'SOLDAT',
+    posada: 'Водій електрик'
   }})
 }  
 

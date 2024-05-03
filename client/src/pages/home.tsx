@@ -8,19 +8,10 @@ import { UiSelectField } from "@/shared/ui/ui-select";
 import { UiHeader } from "@/shared/ui/ui-header";
 
 import { SignOut } from "@/features/auth/ui/sign-out";
+import { useSessionQuery } from "@/entities/session/queries";
 
 export function HomePage() {
-  const { data } = useQuery({
-    queryKey: ["session"],
-    queryFn: () => authControllerGetSessionInfo(),
-  });
-  // useEffect(() => {
-  //   const user = authControllerSingIn({
-  //     email: "avilovd.a@gmail.com",
-  //     password: "1234",
-  //   });
-  //   console.log(user);
-  // }, []);
+  const { data } = useSessionQuery();
   return (
     <main className={`min-h-screen `}>
       <UiHeader
