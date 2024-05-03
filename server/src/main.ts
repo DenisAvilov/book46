@@ -6,14 +6,15 @@ import { ValidationPipe } from '@nestjs/common';
 import 'dotenv/config';
 import { AuthModule } from './auth/auth.module';
 import { AccountModule } from './account/account.module';
+import { ScladModule } from './sclad/sclad.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const globalOptions = new DocumentBuilder()
 
   const authOptions = globalOptions
-    .setTitle('Додаток Помічник')
-    .setDescription('Додаток для ведення обліку майна')
+    .setTitle('Додаток Book46')
+    .setDescription('Додаток для ведення обліку майна.')
     .addTag('auth', 'запити повязані з авторізциї. ')
     .setVersion('1.0')     
     .build();
@@ -42,8 +43,21 @@ async function bootstrap() {
     .setVersion('1.0')         
     .build();
   const appDocument = SwaggerModule.createDocument(app, config, {
-    include: [AppModule, AuthModule, AccountModule],
+    include: [AppModule, AuthModule, AccountModule, ScladModule],
   });
+
+
+  const storageOptions = globalOptions
+    .setTitle('Склад')
+    .setDescription('Склад майна.')
+    .addTag('storage', 'запити повязані з складом. ')
+    .setVersion('1.0')     
+    .build();
+     
+  const storage = SwaggerModule.createDocument(app, storageOptions,{
+    include: [ScladModule],
+  });
+  SwaggerModule.setup('api/storage', app, storage);
 
   SwaggerModule.setup('api', app, appDocument, {
     swaggerOptions: {     

@@ -33,12 +33,15 @@ model Token {
 }
 
 model Account {
-  name     String?
-  lastName String?
-  img      String?
-  id       Int     @id @default(autoincrement())
-  userId   Int     @unique
-  user     User    @relation(fields: [userId], references: [id])
+  name       String? @db.VarChar(30)
+  lastName   String? @db.VarChar(30)
+  secondName String? @db.VarChar(30)
+  rank       Zvannya
+  posada     String? @db.VarChar(230)
+  img        String?
+  id         Int     @id @default(autoincrement())
+  userId     Int     @unique
+  user       User    @relation(fields: [userId], references: [id])
 }
 
 model Contact {
@@ -57,4 +60,100 @@ model Social {
   id        Int     @id @default(autoincrement())
   userId    Int     @unique
   user      User    @relation(fields: [userId], references: [id])
+}
+
+model Sclad {
+  id          Int           @id @default(autoincrement())
+  name        String        @unique @db.VarChar(256)
+  data        DateTime      @default(now())
+  ItemOnSclad ItemOnSclad[]
+}
+
+model ItemOnSclad {
+  id           Int         @id @default(autoincrement())
+  name         String
+  serialNumber String
+  price        Float
+  deportament  Department  @relation(fields: [departmentId], references: [id])
+  departmentId Int
+  StatusMayna  StatusMayna @default(NA_SCLADY)
+  Sclad        Sclad       @relation(fields: [scladId], references: [id])
+  scladId      Int
+  receiving    Receiving   @relation(fields: [receivingId], references: [id])
+  receivingId  Int
+  Shipment     Shipment?   @relation(fields: [shipmentId], references: [id])
+  shipmentId   Int?
+}
+
+model Receiving {
+  id          Int           @id @default(autoincrement())
+  name        String
+  keyId       String        @unique
+  date        String
+  ItemOnSclad ItemOnSclad[]
+}
+
+model Shipment {
+  id           Int            @id @default(autoincrement())
+  name         String         @db.VarChar(256)
+  keyId        String         @db.VarChar(256)
+  date         DateTime       @default(now())
+  items        ItemOnSclad[] // Зв'язок багато-до-одного з товарами на відправлення
+  soldier      Soldier        @relation(fields: [soldierId], references: [id])
+  soldierId    Int
+  department   Department     @relation(fields: [departmentId], references: [id]) // Зв'язок до відділу, де було відправлено
+  departmentId Int
+  status       StatusShipment @default(VUDAVANAY)
+}
+
+model Soldier {
+  id           Int        @id @default(autoincrement())
+  name         String
+  lastName     String
+  secondName   String
+  rank         Zvannya    @default(SOLDAT)
+  position     String //посада
+  phoneNumber  String?
+  department   Department @relation(fields: [departmentId], references: [id])
+  departmentId Int
+  shipments    Shipment[]
+}
+
+model Department {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+
+  soldiers    Soldier[]
+  shipments   Shipment[]
+  itemOnSclad ItemOnSclad[]
+}
+
+enum StatusShipment {
+  VUDAVANAY
+  ZDAVANAY
+}
+
+enum StatusMayna {
+  VUDANO
+  NA_SCLADY
+}
+
+enum Zvannya {
+  SOLDAT
+  ST_SOLDAT
+  MOL_SERZANT
+  SERZANT
+  ST_SERZANT
+  GOL_SERZANT
+  SHTAB_SERZANT
+  MASTER_SERZANT
+  ST_MASTER_SERZANT
+  GOL_MASTER_SERZANT
+  MOL_LEYTENANT
+  LEYTENANT
+  ST_LEYTENANT
+  KAPITAN
+  MAYOR
+  PIDPOLKOVNIK
+  POLKOVNIK
 }
